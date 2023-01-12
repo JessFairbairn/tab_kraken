@@ -1,0 +1,31 @@
+@import url('dark-colours.css') (prefers-color-scheme: dark);
+
+* {
+    font-family: "Fira Sans", Helvetica, sans-serif;
+}
+
+
+.cool-list {
+    background-color: var(--group-background-colour);
+    padding: 0.5em;
+}
+.cool-list, ul.cool-list{
+    min-width: 30em;
+    width: 30em;
+}
+
+.cool-list, .cool-list ul{
+    list-style: none;
+}
+
+.cool-list li {
+    padding: 0.25em 0.5em ;
+}
+
+.cool-list li:nth-child(odd)~li {
+    background-color: var(--alternate-row-colour);
+}
+
+.cool-list li:nth-child(even)~li {
+    background-color: var(--group-background-colour);
+}
