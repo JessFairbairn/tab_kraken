@@ -73,6 +73,7 @@ function createListItemForTab(tab) {
     }
 
     let li = document.createElement("li");
+    li.className = "tab-item"
     li.id = `tab-${tab.id}`
     li.innerText = `Last accessed ${timeString} ${tab.pinned ? '📌' : ''}`;
     let button = document.createElement("button");

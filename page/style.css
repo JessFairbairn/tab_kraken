@@ -22,10 +22,21 @@
     padding: 0.25em 0.5em ;
 }
 
+
 .cool-list li:nth-child(odd)~li {
     background-color: var(--alternate-row-colour);
 }
 
 .cool-list li:nth-child(even)~li {
     background-color: var(--group-background-colour);
+}
+
+.cool-list li.tab-item {
+    display: flex;
+    justify-content: space-between;
+}
+
+.cool-list li.tab-item button{
+    /* float: right; */
+    flex-direction: row;
 }
