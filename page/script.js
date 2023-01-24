@@ -1,27 +1,32 @@
 import "../external/browser-polyfill.min.js"
 import StringCounter from "../js_utils/StringCounter.js"
+import { timeDifferenceString } from "../js_utils/timeDifferenceString.js";
+import delayPromise from "../js_utils/delayPromise.js";
 
 const DOMAIN_LIST_ELEMENT = document.getElementById("domain-list");
 const DUPLICATE_LIST_ELEMENT = document.getElementById("duplicate-list");
 
 browser.tabs.query({}).then(async tabList => {
-    // console.table(tabList, ["url"])
-
-    // let urls = tabList.map(tab => tab.url)
-    // console.log(urls)
     loadDomainList(tabList);
 
     await loadDuplicateTabList(tabList);
 });
 
+browser.tabs.onUpdated.addListener(reloadAll);
+browser.tabs.onCreated.addListener(reloadAll);
+browser.tabs.onRemoved.addListener(() => {
+    delayPromise(100).then(reloadAll);
+});
+
 
 async function loadDuplicateTabList(fullTabList) {
-    DUPLICATE_LIST_ELEMENT.textContent  = '';
+    DUPLICATE_LIST_ELEMENT.innerHTML  = '';
+    console.log("clearing duplicate list")
     const siteSet = countSiteNumbersInTabList(fullTabList);
-    for (const [key, count] of Object.entries(siteSet.getResultsWithMin(2))) {
+    const duplicateTabList = Object.entries(siteSet.getResultsWithMin(2));
+    for (const [key, count] of duplicateTabList) {
 
-        let tabs = await getTabsWithUrlAsync(key);
-        debugger;
+        let tabs = fullTabList.filter(tab => tab.url === key);
 
         let url_li = document.createElement("li");
         url_li.innerText = `${key}: ${count}`;
@@ -34,13 +39,14 @@ async function loadDuplicateTabList(fullTabList) {
         url_li.appendChild(inner_list);
 
         DUPLICATE_LIST_ELEMENT.append(url_li);
+        console.log("appending duplicate list")
     }
 }
 
 function loadDomainList(tabList) {
     const domainSet = countDomainNumbersInTabList(tabList);
     console.log(domainSet.getAll());
-    DOMAIN_LIST_ELEMENT.textContent  = '';
+    DOMAIN_LIST_ELEMENT.innerHTML  = '';
 
     for (const [domain, count] of Object.entries(domainSet.getAll())) {
 
@@ -52,35 +58,6 @@ function loadDomainList(tabList) {
         li.appendChild(button);
         DOMAIN_LIST_ELEMENT.append(li);
     }
-}
-
-function createListItemForTab(tab) {
-    const timeDifference = Date.now() - tab.lastAccessed;
-    let secondsDiff = timeDifference/60000
-    let minutesDiff = secondsDiff/60;
-    let hoursDiff = minutesDiff/60
-    let daysDiff = hoursDiff/24;
-
-    let timeString;
-    if (daysDiff >= 1){
-        timeString = `${Math.floor(daysDiff)} days ago`
-    } else if (hoursDiff >= 1) {
-        timeString = `${Math.floor(hoursDiff)} hours ago`
-    } else if (minutesDiff >= 1) {
-        timeString = `${Math.floor(minutesDiff)} minutes ago`
-    } else {
-        timeString = "just now"
-    }
-
-    let li = document.createElement("li");
-    li.className = "tab-item"
-    li.id = `tab-${tab.id}`
-    li.innerText = `Last accessed ${timeString} ${tab.pinned ? '📌' : ''}`;
-    let button = document.createElement("button");
-    button.innerText = '✖';
-    button.onclick = () => closeTabById(tab.id);
-    li.appendChild(button);
-    return li;
 }
 
 function countDomainNumbersInTabList(urlList) {
@@ -112,15 +89,13 @@ function countSiteNumbersInTabList(urlList) {
 }
 
 async function getTabsWithUrlAsync(url) {
+    debugger
     return await browser.tabs.query({url: url})
 }
 
-async function closeTabById(id) {
+export async function closeTabById(id) {
     await browser.tabs.remove(id);
     document.getElementById(`tab-${id}`).remove();
-    let fullTabList = await browser.tabs.query({});
-    await loadDuplicateTabList(fullTabList)
-    return;
 }
 
 async function closeAllTabsInDomain(domain) {
@@ -128,8 +103,24 @@ async function closeAllTabsInDomain(domain) {
     let tabs = await browser.tabs.query({url: `*://${domain}/*`, pinned: false, hidden: false});
     let tabIds = tabs.map(tab => tab.id);
     await browser.tabs.remove(tabIds);
+}
+
+function createListItemForTab(tab) {
+    let timeString = timeDifferenceString(tab.lastAccessed);
+
+    let li = document.createElement("li");
+    li.className = "tab-item";
+    li.id = `tab-${tab.id}`;
+    li.innerText = `Last accessed ${timeString} ${tab.pinned ? '📌' : ''}`;
+    let button = document.createElement("button");
+    button.innerText = '✖';
+    button.onclick = () => closeTabById(tab.id);
+    li.appendChild(button);
+    return li;
+}
+
+async function reloadAll() {
     let fullTabList = await browser.tabs.query({});
     loadDomainList(fullTabList);
-    return await loadDuplicateTabList(fullTabList);
-        
+    await loadDuplicateTabList(fullTabList);
 }
