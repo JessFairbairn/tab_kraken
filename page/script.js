@@ -29,7 +29,15 @@ async function loadDuplicateTabList(fullTabList) {
         let tabs = fullTabList.filter(tab => tab.url === key);
 
         let url_li = document.createElement("li");
-        url_li.innerText = `${key}: ${count}`;
+        let div = document.createElement("div");
+        div.className = "flex-bar";
+        div.innerText = `${key}: ${count}`;
+        url_li.appendChild(div)
+
+        let button = document.createElement("button");
+        button.innerText = '✖';
+        button.onclick = async () => await closeAllTabsWithUrl(key);
+        div.appendChild(button);
 
         let inner_list = document.createElement("ul");
         for (let tab of tabs) {
@@ -51,6 +59,7 @@ function loadDomainList(tabList) {
     for (const [domain, count] of Object.entries(domainSet.getAll())) {
 
         let li = document.createElement("li");
+        li.className = "flex-bar"
         li.innerText = `${domain}: ${count}`;
         let button = document.createElement("button");
         button.innerText = '✖';
@@ -93,7 +102,7 @@ async function getTabsWithUrlAsync(url) {
     return await browser.tabs.query({url: url})
 }
 
-export async function closeTabById(id) {
+async function closeTabById(id) {
     await browser.tabs.remove(id);
     document.getElementById(`tab-${id}`).remove();
 }
@@ -105,11 +114,18 @@ async function closeAllTabsInDomain(domain) {
     await browser.tabs.remove(tabIds);
 }
 
+async function closeAllTabsWithUrl(url) {
+    
+    let tabs = await browser.tabs.query({url: url, pinned: false, hidden: false});
+    let tabIds = tabs.map(tab => tab.id);
+    await browser.tabs.remove(tabIds);
+}
+
 function createListItemForTab(tab) {
     let timeString = timeDifferenceString(tab.lastAccessed);
 
     let li = document.createElement("li");
-    li.className = "tab-item";
+    li.className = "flex-bar";
     li.id = `tab-${tab.id}`;
     li.innerText = `Last accessed ${timeString} ${tab.pinned ? '📌' : ''}`;
     let button = document.createElement("button");
