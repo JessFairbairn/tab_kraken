@@ -12,6 +12,10 @@ input, select {
     background-color: #27272a;
 }
 
-button:not(.default) {
+button {
     background-color: #4a4a4f;
+}
+
+button:hover {
+    background-color: #58585a;
 }

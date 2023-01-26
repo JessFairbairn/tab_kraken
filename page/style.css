@@ -6,9 +6,31 @@
 
 
 .cool-list {
-    background-color: var(--group-background-colour);
+    
     padding: 0.5em;
 }
+
+
+.cool-list li {
+    padding: 0.25em 0.5em ;
+    margin-bottom: 0.25em;
+}
+
+
+/* .cool-list li:nth-child(odd) {
+    background-color: var(--group-background-colour);
+} */
+
+.cool-list > li {
+    /* background-color: var(--alternate-row-colour); */
+    background-color: var(--group-background-colour);
+}
+
+.cool-list ul > li {
+    background-color: var(--alternate-row-colour);
+}
+
+
 .cool-list, ul.cool-list{
     min-width: 30em;
     width: 30em;
@@ -18,25 +40,23 @@
     list-style: none;
 }
 
-.cool-list li {
-    padding: 0.25em 0.5em ;
-}
-
-
-.cool-list li:nth-child(odd)~li {
-    background-color: var(--alternate-row-colour);
-}
-
-.cool-list li:nth-child(even)~li {
-    background-color: var(--group-background-colour);
-}
-
-.cool-list li.tab-item {
+.cool-list .flex-bar {
     display: flex;
     justify-content: space-between;
 }
 
-.cool-list li.tab-item button{
+.cool-list div.flex-bar {
+    padding-top: 0.25em;
+    padding-bottom: 0.25em;
+    padding-right: 0.5em;
+}
+
+.cool-list .flex-bar button{
     /* float: right; */
     flex-direction: row;
+    border: 0;
+}
+
+.cool-list li li {
+    /* padding-right: 0;; */
 }
