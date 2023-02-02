@@ -1,0 +1,21 @@
+* {
+    /* color: rgb(251, 251, 254); */
+    --page-background-colour: #fffffff0;
+    --group-background-colour: #eee;
+    --alternate-row-colour: #ddd;
+}
+
+html {
+    background-color: var(--page-background-colour);
+}
+/* input, select {
+    background-color: #27272a;
+} */
+
+/* button {
+    background-color: #4a4a4f;
+}
+
+button:hover {
+    background-color: #58585a;
+} */
