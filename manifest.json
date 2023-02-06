@@ -6,6 +6,12 @@
 
   "description": "Helps sort your tabs",
 
+  "browser_specific_settings":{
+    "gecko": {
+      "id": "tabkraken@furby.industries"
+    }
+  },
+
   "icons": {
     "48": "icons/icon.svg"
   },
