@@ -6,6 +6,8 @@ import delayPromise from "../js_utils/delayPromise.js";
 const DOMAIN_LIST_ELEMENT = document.getElementById("domain-list");
 const DUPLICATE_LIST_ELEMENT = document.getElementById("duplicate-list");
 
+const TAB_KRAKEN_UUID = (new URL(document.URL)).hostname
+
 browser.tabs.query({}).then(async tabList => {
     loadDomainList(tabList);
 
@@ -78,14 +80,26 @@ function loadDomainList(tabList) {
 }
 
 function countDomainNumbersInTabList(urlList) {
+
+    let extension_list = []
     
     let domainCounts = new StringCounter();
     for (let tab of urlList) {
         if (tab.url.startsWith("about:")) {
             domainCounts.add("about:");
-        } 
+        }
+        else if (tab.url.startsWith("moz-extension://" + TAB_KRAKEN_UUID)) {
+            domainCounts.add("Tab Kraken");
+        }
         else if (tab.url.startsWith("moz-extension://")) {
-            domainCounts.add("Extensions")
+            
+            // let url = new URL(tab.url);
+            // if (extension_list.indexOf(url.hostname) === -1) {
+            //     extension_list.push(url.hostname)
+            // }
+
+            // domainCounts.add(`Extension ${}`)
+            domainCounts.add('Extensions');
         }
         else {
             let url = new URL(tab.url);
