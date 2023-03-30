@@ -53,10 +53,18 @@ async function loadDuplicateTabList(fullTabList) {
 
 function loadDomainList(tabList) {
     const domainSet = countDomainNumbersInTabList(tabList);
-    console.log(domainSet.getAll());
+    console.table(domainSet.getAll());
     DOMAIN_LIST_ELEMENT.innerHTML  = '';
 
-    for (const [domain, count] of Object.entries(domainSet.getAll())) {
+    let dict = domainSet.getAll();
+    
+    let items = Object.entries(dict);
+    // Sort the array based on the second element
+    items.sort(function(first, second) {
+        return second[1] - first[1];
+    });
+
+    for (const [domain, count] of items) {
 
         let li = document.createElement("li");
         li.className = "flex-bar"
@@ -105,6 +113,7 @@ async function getTabsWithUrlAsync(url) {
 async function closeTabById(id) {
     await browser.tabs.remove(id);
     document.getElementById(`tab-${id}`).remove();
+    await reloadAll();
 }
 
 async function closeAllTabsInDomain(domain) {
@@ -112,6 +121,7 @@ async function closeAllTabsInDomain(domain) {
     let tabs = await browser.tabs.query({url: `*://${domain}/*`, pinned: false, hidden: false});
     let tabIds = tabs.map(tab => tab.id);
     await browser.tabs.remove(tabIds);
+    await reloadAll();
 }
 
 async function closeAllTabsWithUrl(url) {
@@ -127,7 +137,7 @@ function createListItemForTab(tab) {
     let li = document.createElement("li");
     li.className = "flex-bar";
     li.id = `tab-${tab.id}`;
-    li.innerText = `Last accessed ${timeString} ${tab.pinned ? '📌' : ''}`;
+    li.innerHTML = `Last accessed ${timeString} ${tab.pinned ? '<span class="emoji">📌</span>' : ''}${tab.hidden ? '<img src="../icons/eye-no-icon-original.svg"></img>' : ''}`;
     let button = document.createElement("button");
     button.innerText = '✖';
     button.onclick = () => closeTabById(tab.id);
