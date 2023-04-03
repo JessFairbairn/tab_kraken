@@ -23,7 +23,7 @@ browser.tabs.onRemoved.addListener(() => {
 
 async function loadDuplicateTabList(fullTabList) {
     DUPLICATE_LIST_ELEMENT.innerHTML  = '';
-    console.log("clearing duplicate list")
+    console.debug("clearing duplicate list")
     const siteSet = countSiteNumbersInTabList(fullTabList);
     const duplicateTabList = Object.entries(siteSet.getResultsWithMin(2));
     for (const [key, count] of duplicateTabList) {
@@ -49,7 +49,7 @@ async function loadDuplicateTabList(fullTabList) {
         url_li.appendChild(inner_list);
 
         DUPLICATE_LIST_ELEMENT.append(url_li);
-        console.log("appending duplicate list")
+        console.debug("appending duplicate list")
     }
 }
 
