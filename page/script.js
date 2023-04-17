@@ -2,6 +2,7 @@ import "../external/browser-polyfill.min.js"
 import StringCounter from "../js_utils/StringCounter.js"
 import { timeDifferenceString } from "../js_utils/timeDifferenceString.js";
 import delayPromise from "../js_utils/delayPromise.js";
+import { TabItem, TabItemList } from "./TabItems.js";
 
 const DOMAIN_LIST_ELEMENT = document.getElementById("domain-list");
 const DUPLICATE_LIST_ELEMENT = document.getElementById("duplicate-list");
@@ -9,8 +10,15 @@ const DUPLICATE_LIST_ELEMENT = document.getElementById("duplicate-list");
 const TAB_KRAKEN_UUID = (new URL(document.URL)).hostname
 
 browser.tabs.query({}).then(async tabList => {
-    loadDomainList(tabList);
+    let testList = new TabItemList(tabList);
+    let label = document.createElement("span")
+    testList.innerText = "Hello"
+    document.getElementById("test-box").append(testList)
 
+    // let testListItem = new TabItem(tabList[0])
+    // document.getElementById("test-box").append(testListItem)
+
+    loadDomainList(tabList);
     await loadDuplicateTabList(tabList);
 });
 

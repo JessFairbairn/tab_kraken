@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="UTF-8"/>
         <script type="module" src="../node_modules/webextension-polyfill/dist/browser-polyfill.min.js"></script>
         <script type="module" src="../js_utils/StringCounter.js"></script>
         <script type="module" async src="script.js"></script>
@@ -11,10 +12,82 @@
         <header class="panel-section panel-section-header">
             <h1>Tab Kraken</h1>
         </header>
+        <h2>TEST OMG</h2>
+        <div id="test-box"></div>
         <H2>Domains</H2>
         <ul id="domain-list" class="cool-list"></ul>
 
         <h2>Duplicate tabs</h2>
         <ul id="duplicate-list" class="cool-list"></ul>
+        
+        <template id="tab-item-list-template" class="cool-list">
+            <style>
+                .cool-list {
+                    
+                }
+
+
+                .cool-list li, .cool-list .tab-item {
+                    padding: 0.25em 0.5em ;
+                    margin-bottom: 0.25em;
+                }
+
+
+                /* .cool-list li:nth-child(odd) {
+                    background-color: var(--group-background-colour);
+                } */
+
+                .cool-list > li, .cool-list > .tab-item {
+                    /* background-color: var(--alternate-row-colour); */
+                    background-color: var(--group-background-colour);
+                }
+
+                .cool-list ul > li {
+                    background-color: var(--alternate-row-colour);
+                }
+
+
+                :host {
+                    min-width: 30em;
+                    width: 30em;
+                    display: block;
+                    
+                    padding: 0.5em;
+                }
+
+                ul {
+                    list-style: none;
+                }
+
+               .flex-bar {
+                    display: flex;
+                    justify-content: space-between;
+                }
+
+                .flex-bar {
+                    padding-top: 0.25em;
+                    padding-bottom: 0.25em;
+                    padding-right: 0.5em;
+                }
+
+                .flex-bar button {
+                    /* float: right; */
+                    flex-direction: row;
+                    border: 0;
+                }
+
+                #tab-list {
+                    
+                    padding: 0.5em;
+                }
+            </style>
+            <div class="flex-bar">
+                <slot></slot>: <slot name="number"></slot><button>✖</button>
+            </div>
+            <ul id="tab-list"></ul>
+        </template>
+        <template id="tab-item-template">
+            <slot></slot> <button>✖</button>
+        </template>
     </body>
 </html>
