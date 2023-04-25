@@ -2,7 +2,7 @@
 import { timeDifferenceString } from "../js_utils/timeDifferenceString.js";
 
 export class TabItemList extends HTMLElement {
-    constructor(tabList, displayTabLabel = false) {
+    constructor(tabList, closeFunction, displayTabLabel = false) {
         super();
         let template = document.getElementById("tab-item-list-template");
         let templateContent = template.content;
@@ -32,6 +32,8 @@ export class TabItemList extends HTMLElement {
         for (let tab of tabList) {
             tabUl.appendChild(new TabItem(tab, displayTabLabel));
         }
+
+        this.shadowRoot.querySelector("#closeAllButton").onclick = closeFunction;
     }
 }
 
@@ -43,6 +45,9 @@ export class TabItem extends HTMLLIElement {
         // let templateContent = template.content;
         // const shadowRoot = this.attachShadow({ mode: "open" });
         // shadowRoot.appendChild(templateContent.cloneNode(true));
+
+        let tabMap = new WeakMap();
+
         if (!tab) {
             return;
         }

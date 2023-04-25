@@ -10,7 +10,7 @@ const DUPLICATE_LIST_ELEMENT = document.getElementById("duplicate-list");
 const TAB_KRAKEN_UUID = (new URL(document.URL)).hostname
 
 browser.tabs.query({}).then(async tabList => {
-    let testList = new TabItemList(tabList, true);
+    let testList = new TabItemList(tabList, async () => closeAllTabsWithUrl("https://example.com/"), true);
     testList.innerText = "Test list"
     document.getElementById("test-box").append(testList)
 
