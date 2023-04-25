@@ -3,3 +3,4 @@ node_modules
 .vscode
 
 external
+vscode-firefox-debug.log
