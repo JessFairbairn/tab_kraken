@@ -7,15 +7,12 @@ import { TabItem, TabItemList } from "./TabItems.js";
 const DOMAIN_LIST_ELEMENT = document.getElementById("domain-list");
 const DUPLICATE_LIST_ELEMENT = document.getElementById("duplicate-list");
 
-const TAB_KRAKEN_UUID = (new URL(document.URL)).hostname
+const TAB_KRAKEN_UUID = (new URL(document.URL)).hostname;
 
 browser.tabs.query({}).then(async tabList => {
-    let testList = new TabItemList(tabList, async () => closeAllTabsWithUrl("https://example.com/"), true);
-    testList.innerText = "Test list"
-    document.getElementById("test-box").append(testList)
-
-    // let testListItem = new TabItem(tabList[0])
-    // document.getElementById("test-box").append(testListItem)
+    // let testList = new TabItemList(tabList, async () => closeAllTabsWithUrl("https://example.com/"), true);
+    // testList.innerText = "Test list"
+    // document.getElementById("test-box").append(testList)
 
     loadDomainList(tabList);
     await loadDuplicateTabList(tabList);
@@ -75,14 +72,28 @@ function loadDomainList(tabList) {
 
     for (const [domain, count] of items) {
 
-        let li = document.createElement("li");
-        li.className = "flex-bar"
-        li.innerText = `${domain}: ${count}`;
-        let button = document.createElement("button");
-        button.innerText = '✖';
-        button.onclick = () => closeAllTabsInDomain(domain);
-        li.appendChild(button);
-        DOMAIN_LIST_ELEMENT.append(li);
+        // let li = document.createElement("li");
+        // li.className = "flex-bar"
+        // li.innerText = `${domain}: ${count}`;
+        // let button = document.createElement("button");
+        // button.innerText = '✖';
+        // button.onclick = () => closeAllTabsInDomain(domain);
+        // li.appendChild(button);
+        // DOMAIN_LIST_ELEMENT.append(li);
+
+        let domainTabs = tabList.filter(tab => tab.url.includes(domain))
+
+        let tabListElement = new TabItemList(
+            domainTabs, 
+            () => closeAllTabsInDomain(domain), 
+            true
+        );
+        if (domain === "moz-extension://" + TAB_KRAKEN_UUID){
+            tabListElement.innerText = "Tab Kraken"
+        } else {
+            tabListElement.innerText = domain;
+        }
+        DOMAIN_LIST_ELEMENT.append(tabListElement);
     }
 }
 
@@ -96,7 +107,7 @@ function countDomainNumbersInTabList(urlList) {
             domainCounts.add("about:");
         }
         else if (tab.url.startsWith("moz-extension://" + TAB_KRAKEN_UUID)) {
-            domainCounts.add("Tab Kraken");
+            domainCounts.add("moz-extension://" + TAB_KRAKEN_UUID);
         }
         else if (tab.url.startsWith("moz-extension://")) {
             
