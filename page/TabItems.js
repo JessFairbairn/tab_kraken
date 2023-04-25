@@ -2,11 +2,11 @@
 import { timeDifferenceString } from "../js_utils/timeDifferenceString.js";
 
 export class TabItemList extends HTMLElement {
-    constructor(tabList) {
+    constructor(tabList, displayTabLabel = false) {
         super();
         let template = document.getElementById("tab-item-list-template");
         let templateContent = template.content;
-        this.className = "cool-list"
+        // this.className = "cool-list"
 
         // let url_li = document.createElement("li");
         // let div = document.createElement("div");
@@ -30,14 +30,14 @@ export class TabItemList extends HTMLElement {
         
         const tabUl = shadowRoot.getElementById("tab-list");
         for (let tab of tabList) {
-            tabUl.appendChild(new TabItem(tab));
+            tabUl.appendChild(new TabItem(tab, displayTabLabel));
         }
     }
 }
 
 export class TabItem extends HTMLLIElement {
     
-    constructor(tab) {
+    constructor(tab, displayTabLabel = false) {
         super();
         let template = document.getElementById("tab-item-template");
         // let templateContent = template.content;
@@ -51,7 +51,12 @@ export class TabItem extends HTMLLIElement {
         
         this.classList.add("tab-item", "flex-bar");
         this.id = `tab-${tab.id}`
-        this.innerText = `Last accessed ${timeString} ${tab.pinned ? '📌' : ''}`;
+
+        let title = tab.title !== "Server Not Found" ? tab.title : tab.url
+        let tabLabel = displayTabLabel ? title + ' ' : '';
+        let description = `Last accessed ${timeString} ${tab.pinned ? '<span class="emoji">📌</span>' : ''}${tab.hidden ? '<img src="../icons/eye-no-icon-original.svg"></img>' : ''}`;
+        this.innerText = tabLabel + description;
+
         let button = document.createElement("button");
         button.innerText = '✖';
         button.onclick = async () => {

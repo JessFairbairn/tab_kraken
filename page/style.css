@@ -57,3 +57,9 @@
     flex-direction: row;
     border: 0;
 }
+
+tab-item-list {
+    background-color: var(--group-background-colour);
+    padding: 0.25em 0.5em ;
+                    margin-bottom: 0.25em;
+}

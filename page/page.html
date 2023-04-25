@@ -22,12 +22,8 @@
         
         <template id="tab-item-list-template" class="cool-list">
             <style>
-                .cool-list {
-                    
-                }
 
-
-                .cool-list li, .cool-list .tab-item {
+                :root, li {
                     padding: 0.25em 0.5em ;
                     margin-bottom: 0.25em;
                 }
@@ -57,6 +53,7 @@
 
                 ul {
                     list-style: none;
+                    margin: 0;
                 }
 
                .flex-bar {
@@ -71,14 +68,12 @@
                 }
 
                 .flex-bar button {
-                    /* float: right; */
                     flex-direction: row;
                     border: 0;
                 }
 
-                #tab-list {
-                    
-                    padding: 0.5em;
+                #tab-list li {
+                    background-color: var(--alternate-row-colour);
                 }
             </style>
             <div class="flex-bar">
@@ -86,8 +81,8 @@
             </div>
             <ul id="tab-list"></ul>
         </template>
-        <template id="tab-item-template">
+        <!-- <template id="tab-item-template">
             <slot></slot> <button>✖</button>
-        </template>
+        </template> -->
     </body>
 </html>
