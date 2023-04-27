@@ -2,7 +2,7 @@ import "../external/browser-polyfill.min.js"
 import StringCounter from "../js_utils/StringCounter.js"
 import { timeDifferenceString } from "../js_utils/timeDifferenceString.js";
 import delayPromise from "../js_utils/delayPromise.js";
-import { TabItem, TabItemList } from "./TabItems.js";
+import { TabItemList } from "./TabItems.js";
 
 const DOMAIN_LIST_ELEMENT = document.getElementById("domain-list");
 const DUPLICATE_LIST_ELEMENT = document.getElementById("duplicate-list");
@@ -10,9 +10,6 @@ const DUPLICATE_LIST_ELEMENT = document.getElementById("duplicate-list");
 const TAB_KRAKEN_UUID = (new URL(document.URL)).hostname;
 
 browser.tabs.query({}).then(async tabList => {
-    // let testList = new TabItemList(tabList, async () => closeAllTabsWithUrl("https://example.com/"), true);
-    // testList.innerText = "Test list"
-    // document.getElementById("test-box").append(testList)
 
     loadDomainList(tabList);
     await loadDuplicateTabList(tabList);
@@ -30,29 +27,18 @@ async function loadDuplicateTabList(fullTabList) {
     console.debug("clearing duplicate list")
     const siteSet = countSiteNumbersInTabList(fullTabList);
     const duplicateTabList = Object.entries(siteSet.getResultsWithMin(2));
-    for (const [key, count] of duplicateTabList) {
+    for (const [key, _] of duplicateTabList) {
 
         let tabs = fullTabList.filter(tab => tab.url === key);
+        
+        let tabListElement = new TabItemList(
+            tabs, 
+            async () => await closeAllTabsWithUrl(key), 
+            false
+        );
+        tabListElement.innerText = key;
 
-        let url_li = document.createElement("li");
-        let div = document.createElement("div");
-        div.className = "flex-bar";
-        div.innerText = `${key}: ${count}`;
-        url_li.appendChild(div)
-
-        let button = document.createElement("button");
-        button.innerText = '✖';
-        button.onclick = async () => await closeAllTabsWithUrl(key);
-        div.appendChild(button);
-
-        let inner_list = document.createElement("ul");
-        for (let tab of tabs) {
-            let li = createListItemForTab(tab);
-            inner_list.appendChild(li);
-        }
-        url_li.appendChild(inner_list);
-
-        DUPLICATE_LIST_ELEMENT.append(url_li);
+        DUPLICATE_LIST_ELEMENT.append(tabListElement);
         console.debug("appending duplicate list")
     }
 }
@@ -71,15 +57,6 @@ function loadDomainList(tabList) {
     });
 
     for (const [domain, count] of items) {
-
-        // let li = document.createElement("li");
-        // li.className = "flex-bar"
-        // li.innerText = `${domain}: ${count}`;
-        // let button = document.createElement("button");
-        // button.innerText = '✖';
-        // button.onclick = () => closeAllTabsInDomain(domain);
-        // li.appendChild(button);
-        // DOMAIN_LIST_ELEMENT.append(li);
 
         let domainTabs = tabList.filter(tab => tab.url.includes(domain))
 
