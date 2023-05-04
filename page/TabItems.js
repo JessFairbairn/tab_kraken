@@ -2,22 +2,12 @@
 import { timeDifferenceString } from "../js_utils/timeDifferenceString.js";
 
 export class TabItemList extends HTMLElement {
-    constructor(tabList, closeFunction, displayTabLabel = false) {
+
+    constructor(tabList, closeFunction, displayTabLabel, collapseList = false) {
         super();
         let template = document.getElementById("tab-item-list-template");
         let templateContent = template.content;
-        // this.className = "cool-list"
 
-        // let url_li = document.createElement("li");
-        // let div = document.createElement("div");
-        // div.className = "flex-bar";
-        // // div.innerText = `${key}: ${count}`;
-        // url_li.appendChild(div)
-
-        // let button = document.createElement("button");
-        // button.innerText = '✖';
-        // button.onclick = async () => await closeAllTabsWithUrl(key);
-        // div.appendChild(button);
         const shadowRoot = this.attachShadow({ mode: "open" });
         shadowRoot.appendChild(templateContent.cloneNode(true));
         if (!tabList) {
@@ -34,6 +24,22 @@ export class TabItemList extends HTMLElement {
         }
 
         this.shadowRoot.querySelector("#closeAllButton").onclick = closeFunction;
+        this.shadowRoot.querySelector("#collapseButton").onclick = this.toggleCollapse;
+
+        this.collapseList = collapseList;
+        if (this.collapseList) {
+            shadowRoot.getElementById("tab-list").classList.add("collapsed");
+        }
+    }
+
+    toggleCollapse() {
+        let shadowRoot = this.getRootNode();
+        shadowRoot.host.collapseList = !shadowRoot.host.collapseList;
+        if (shadowRoot.host.collapseList) {
+            shadowRoot.getElementById("tab-list").classList.add("collapsed");
+        } else {
+            shadowRoot.getElementById("tab-list").classList.remove("collapsed");
+        }
     }
 }
 
@@ -42,9 +48,6 @@ export class TabItem extends HTMLLIElement {
     constructor(tab, displayTabLabel = false) {
         super();
         let template = document.getElementById("tab-item-template");
-        // let templateContent = template.content;
-        // const shadowRoot = this.attachShadow({ mode: "open" });
-        // shadowRoot.appendChild(templateContent.cloneNode(true));
 
         let tabMap = new WeakMap();
 
@@ -58,9 +61,11 @@ export class TabItem extends HTMLLIElement {
         this.id = `tab-${tab.id}`
 
         let title = tab.title !== "Server Not Found" ? tab.title : tab.url
-        let tabLabel = displayTabLabel ? title + ' ' : '';
+        title = title.slice(0,50);
+        this.innerText = displayTabLabel ? title + ' ' : '';
+        
         let description = `Last accessed ${timeString} ${tab.pinned ? '<span class="emoji">📌</span>' : ''}${tab.hidden ? '<img src="../icons/eye-no-icon-original.svg"></img>' : ''}`;
-        this.innerText = tabLabel + description;
+        this.innerHTML = this.innerHTML + description;
 
         let button = document.createElement("button");
         button.innerText = '✖';

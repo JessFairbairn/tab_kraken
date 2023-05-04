@@ -57,12 +57,19 @@ function loadDomainList(tabList) {
     });
 
     for (const [domain, count] of items) {
+        if (!domain) {
+            continue;
+        }
+        
+        if (domain === "Tab Kraken") {
 
+        }
         let domainTabs = tabList.filter(tab => tab.url.includes(domain))
 
         let tabListElement = new TabItemList(
             domainTabs, 
             () => closeAllTabsInDomain(domain), 
+            true,
             true
         );
         if (domain === "moz-extension://" + TAB_KRAKEN_UUID){
@@ -79,6 +86,8 @@ function countDomainNumbersInTabList(urlList) {
     let extension_list = []
     
     let domainCounts = new StringCounter();
+    let domainTabLists = {};
+
     for (let tab of urlList) {
         if (tab.url.startsWith("about:")) {
             domainCounts.add("about:");
