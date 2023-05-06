@@ -32,3 +32,20 @@ describe("StringCounter.getResultsWithMin", () => {
         expect(results).toEqual({"foo":2});
     });
 });
+
+describe("StringCounter.getAllOrdered", () => {
+    let counter;
+    beforeEach(()=> counter = new StringCounter())
+
+    it("should return a list of descending items", () => {
+        counter._counts = {
+            "tinky winky": 1,
+            "dispy": 2,
+            "lala": 3,
+            "po" : 4
+        }
+
+        let results = counter.getAllOrdered();
+        expect(results[0]).toEqual(["po", 4]);
+    });
+});

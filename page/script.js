@@ -44,30 +44,19 @@ async function loadDuplicateTabList(fullTabList) {
 }
 
 function loadDomainList(tabList) {
-    const domainSet = countDomainNumbersInTabList(tabList);
-    console.table(domainSet.getAll());
+    const generator = countDomainNumbersInTabList(tabList);
+
     DOMAIN_LIST_ELEMENT.innerHTML  = '';
 
-    let dict = domainSet.getAll();
-    
-    let items = Object.entries(dict);
-    // Sort the array based on the second element
-    items.sort(function(first, second) {
-        return second[1] - first[1];
-    });
 
-    for (const [domain, count] of items) {
+    for (const [domain, domainTabList] of generator) {
         if (!domain) {
             continue;
         }
         
-        if (domain === "Tab Kraken") {
-
-        }
-        let domainTabs = tabList.filter(tab => tab.url.includes(domain))
 
         let tabListElement = new TabItemList(
-            domainTabs, 
+            domainTabList, 
             () => closeAllTabsInDomain(domain), 
             true,
             true
@@ -81,19 +70,25 @@ function loadDomainList(tabList) {
     }
 }
 
-function countDomainNumbersInTabList(urlList) {
+function* countDomainNumbersInTabList(urlList) {
 
     let extension_list = []
     
     let domainCounts = new StringCounter();
-    let domainTabLists = {};
+    let domainTabLists = {
+        "about": [],
+        "Extensions": [],
+        "Tab Kraken": []
+    };
 
     for (let tab of urlList) {
         if (tab.url.startsWith("about:")) {
-            domainCounts.add("about:");
+            domainCounts.add("about");
+            domainTabLists["about"].push(tab)
         }
         else if (tab.url.startsWith("moz-extension://" + TAB_KRAKEN_UUID)) {
-            domainCounts.add("moz-extension://" + TAB_KRAKEN_UUID);
+            domainCounts.add("Tab Kraken");
+            domainTabLists["Tab Kraken"].push(tab)
         }
         else if (tab.url.startsWith("moz-extension://")) {
             
@@ -104,14 +99,24 @@ function countDomainNumbersInTabList(urlList) {
 
             // domainCounts.add(`Extension ${}`)
             domainCounts.add('Extensions');
+            domainTabLists["Extensions"].push(tab)
         }
         else {
             let url = new URL(tab.url);
             domainCounts.add(url.hostname);
+            if (domainTabLists[url.hostname]) {
+                domainTabLists[url.hostname].push(tab);
+            } else {
+                domainTabLists[url.hostname] = [tab];
+            }
         }
         
     }
-    return domainCounts;
+
+    let orderedItems = domainCounts.getAllOrdered()
+    for (const [domain, _] of orderedItems) {
+        yield [domain, domainTabLists[domain]];
+    }
 }
 
 function countSiteNumbersInTabList(urlList) {

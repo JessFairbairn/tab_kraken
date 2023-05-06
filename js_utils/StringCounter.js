@@ -19,6 +19,19 @@ export default class StringCounter {
         return this._counts;
     }
 
+    getAllOrdered() {
+        let countDict = this._counts;
+        let itemList =  Object.keys(countDict).map(function(key) {
+            return [key, countDict[key]];
+        });
+
+        itemList.sort((a, b) => a[1] - b[1]);
+        
+        itemList.reverse();
+
+        return itemList;
+    }
+
     getResultsWithMin(min=1) {
         let filtered = Object.fromEntries(Object.entries(this._counts).filter(([k,v]) => v>=min));
         return filtered;
