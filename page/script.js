@@ -1,6 +1,5 @@
 import "../external/browser-polyfill.min.js"
 import StringCounter from "../js_utils/StringCounter.js"
-import { timeDifferenceString } from "../js_utils/timeDifferenceString.js";
 import delayPromise from "../js_utils/delayPromise.js";
 import { TabItemList } from "./TabItems.js";
 
@@ -128,17 +127,6 @@ function countSiteNumbersInTabList(urlList) {
     return siteCounts;
 }
 
-async function getTabsWithUrlAsync(url) {
-    debugger
-    return await browser.tabs.query({url: url})
-}
-
-async function closeTabById(id) {
-    await browser.tabs.remove(id);
-    document.getElementById(`tab-${id}`).remove();
-    await reloadAll();
-}
-
 async function closeAllTabsInDomain(domain) {
     
     let tabs = await browser.tabs.query({url: `*://${domain}/*`, pinned: false, hidden: false});
@@ -152,20 +140,6 @@ async function closeAllTabsWithUrl(url) {
     let tabs = await browser.tabs.query({url: url, pinned: false, hidden: false});
     let tabIds = tabs.map(tab => tab.id);
     await browser.tabs.remove(tabIds);
-}
-
-function createListItemForTab(tab) {
-    let timeString = timeDifferenceString(tab.lastAccessed);
-
-    let li = document.createElement("li");
-    li.className = "flex-bar";
-    li.id = `tab-${tab.id}`;
-    li.innerHTML = `Last accessed ${timeString} ${tab.pinned ? '<span class="emoji">📌</span>' : ''}${tab.hidden ? '<img src="../icons/eye-no-icon-original.svg"></img>' : ''}`;
-    let button = document.createElement("button");
-    button.innerText = '✖';
-    button.onclick = () => closeTabById(tab.id);
-    li.appendChild(button);
-    return li;
 }
 
 async function reloadAll() {
