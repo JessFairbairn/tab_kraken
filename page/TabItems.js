@@ -18,9 +18,14 @@ export class TabItemList extends HTMLElement {
           .querySelector("slot[name='number']")
           .append(tabList.length);
         
+        this.tabMap = {};
+
         const tabUl = shadowRoot.getElementById("tab-list");
         for (let tab of tabList) {
-            tabUl.appendChild(new TabItem(tab, displayTabLabel));
+            const tabItem = new TabItem(tab, displayTabLabel);
+            tabUl.appendChild(tabItem);
+
+            this.tabMap[tab.id] = tabItem;
         }
 
         this.shadowRoot.querySelector("#closeAllButton").onclick = closeFunction;
@@ -30,6 +35,7 @@ export class TabItemList extends HTMLElement {
         if (this.collapseList) {
             shadowRoot.getElementById("tab-list").classList.add("collapsed");
         }
+
     }
 
     toggleCollapse() {
@@ -41,6 +47,19 @@ export class TabItemList extends HTMLElement {
             shadowRoot.getElementById("tab-list").classList.remove("collapsed");
         }
     }
+
+    tabClosedAction(tabId) {
+        let tabElement = this.tabMap[tabId];
+        if (tabElement) {
+            tabElement.remove();
+            delete this.tabMap[tabId];
+            this.shadowRoot
+                .querySelector("slot[name='number']")
+                .innerText = Object.keys(this.tabMap).length;
+        }
+
+        
+    }
 }
 
 export class TabItem extends HTMLLIElement {
@@ -48,8 +67,6 @@ export class TabItem extends HTMLLIElement {
     constructor(tab, displayTabLabel = false) {
         super();
         let template = document.getElementById("tab-item-template");
-
-        let tabMap = new WeakMap();
 
         if (!tab) {
             return;

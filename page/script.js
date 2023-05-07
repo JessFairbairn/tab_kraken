@@ -14,10 +14,15 @@ browser.tabs.query({}).then(async tabList => {
     await loadDuplicateTabList(tabList);
 });
 
+let tabLists = [];
+
 browser.tabs.onUpdated.addListener(reloadAll);
 browser.tabs.onCreated.addListener(reloadAll);
-browser.tabs.onRemoved.addListener(() => {
-    delayPromise(100).then(reloadAll);
+browser.tabs.onRemoved.addListener((tabId, removeInfo) => {
+    // delayPromise(100).then(reloadAll);
+    tabLists.forEach(element => {
+        element.tabClosedAction(tabId);
+    });
 });
 
 
@@ -39,6 +44,8 @@ async function loadDuplicateTabList(fullTabList) {
 
         DUPLICATE_LIST_ELEMENT.append(tabListElement);
         console.debug("appending duplicate list")
+
+        tabLists.push(tabListElement);
     }
 }
 
@@ -66,6 +73,7 @@ function loadDomainList(tabList) {
             tabListElement.innerText = domain;
         }
         DOMAIN_LIST_ELEMENT.append(tabListElement);
+        tabLists.push(tabListElement);
     }
 }
 
