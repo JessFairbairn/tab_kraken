@@ -34,6 +34,8 @@ export class TabItemList extends HTMLElement {
         this.collapseList = collapseList;
         if (this.collapseList) {
             shadowRoot.getElementById("tab-list").classList.add("collapsed");
+            shadowRoot.querySelector("#collapseButton img")
+            .setAttribute("src", "../icons/chevron-down.svg");
         }
 
     }
@@ -43,8 +45,12 @@ export class TabItemList extends HTMLElement {
         shadowRoot.host.collapseList = !shadowRoot.host.collapseList;
         if (shadowRoot.host.collapseList) {
             shadowRoot.getElementById("tab-list").classList.add("collapsed");
+            shadowRoot.querySelector("#collapseButton img")
+                .setAttribute("src", "../icons/chevron-down.svg");
         } else {
             shadowRoot.getElementById("tab-list").classList.remove("collapsed");
+            shadowRoot.querySelector("#collapseButton img")
+                .setAttribute("src", "../icons/chevron-up.svg");
         }
     }
 
