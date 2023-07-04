@@ -23,6 +23,7 @@ export class TabItemList extends HTMLElement {
         const tabUl = shadowRoot.getElementById("tab-list");
         for (let tab of tabList) {
             const tabItem = new TabItem(tab, displayTabLabel);
+            tabItem.classList.add("flex-bar");
             tabUl.appendChild(tabItem);
 
             this.tabMap[tab.id] = tabItem;
@@ -37,6 +38,8 @@ export class TabItemList extends HTMLElement {
             shadowRoot.querySelector("#collapseButton img")
             .setAttribute("src", "../icons/chevron-down.svg");
         }
+        shadowRoot.getElementById("collapseButton")
+                .setAttribute("aria-expanded", String(!this.collapseList));
 
     }
 
@@ -47,10 +50,14 @@ export class TabItemList extends HTMLElement {
             shadowRoot.getElementById("tab-list").classList.add("collapsed");
             shadowRoot.querySelector("#collapseButton img")
                 .setAttribute("src", "../icons/chevron-down.svg");
+            shadowRoot.getElementById("collapseButton")
+                .setAttribute("aria-expanded", "false");
         } else {
             shadowRoot.getElementById("tab-list").classList.remove("collapsed");
             shadowRoot.querySelector("#collapseButton img")
                 .setAttribute("src", "../icons/chevron-up.svg");
+            shadowRoot.getElementById("collapseButton")
+                .setAttribute("aria-expanded", "true");
         }
     }
 
@@ -73,30 +80,38 @@ export class TabItem extends HTMLLIElement {
     constructor(tab, displayTabLabel = false) {
         super();
         let template = document.getElementById("tab-item-template");
+        let templateContent = template.content;
+
+        // const shadowRoot = this.attachShadow({ mode: "open" });
+        const containerNode = (templateContent.cloneNode(true));
+
 
         if (!tab) {
             return;
         }
-        let timeString = timeDifferenceString(tab.lastAccessed);
 
         
-        this.classList.add("tab-item", "flex-bar");
+        // this.classList.add("tab-item", "flex-bar");
         this.id = `tab-${tab.id}`
 
         let title = tab.title !== "Server Not Found" ? tab.title : tab.url
         title = title.slice(0,50);
         this.innerText = displayTabLabel ? title + ' ' : '';
         
+        
+        let timeString = timeDifferenceString(tab.lastAccessed);
         let description = `Last accessed ${timeString} ${tab.pinned ? '<span class="emoji">📌</span>' : ''}${tab.hidden ? '<img src="../icons/eye-no-icon-original.svg"></img>' : ''}`;
-        this.innerHTML = this.innerHTML + description;
 
-        let button = document.createElement("button");
-        button.innerText = '✖';
+        containerNode.children.description.innerHTML = description;
+
+        let button = containerNode.querySelector("button");
+
         button.onclick = async () => {
             await closeTabById(tab.id);
             this.remove();
         }
-        this.appendChild(button);
+
+        this.append(containerNode);
     }
 }
 

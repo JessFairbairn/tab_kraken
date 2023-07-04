@@ -85,13 +85,21 @@
             </style>
             <div class="flex-bar">
                 <slot></slot>: <slot name="number"></slot>
-                <button id="collapseButton"><img src="../icons/chevron-up.svg"/></button>
-                <button id="closeAllButton">✖</button>
+                <button
+                id="collapseButton"
+                title="Toggle list of tabs in category"
+                aria-controls="tab-list">
+                    <img src="../icons/chevron-up.svg" aria-hidden="true"/>
+                </button>
+                <button id="closeAllButton" title="Close all tabs in category">
+                    <span aria-hidden="true">✖</span></button>
             </div>
             <ul id="tab-list"></ul>
         </template>
-        <!-- <template id="tab-item-template">
-            <slot></slot> <button>✖</button>
-        </template> -->
+
+        <template id="tab-item-template" class="flex-bar">
+            <slot></slot> <slot name="description"></slot>
+            <button title="Close tab"><span aria-hidden="true">✖</span></button>
+        </template>
     </body>
 </html>
