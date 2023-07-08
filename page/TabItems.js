@@ -98,11 +98,29 @@ export class TabItem extends HTMLLIElement {
         title = title.slice(0,50);
         this.innerText = displayTabLabel ? title + ' ' : '';
         
-        
-        let timeString = timeDifferenceString(tab.lastAccessed);
-        let description = `Last accessed ${timeString} ${tab.pinned ? '<span class="emoji">📌</span>' : ''}${tab.hidden ? '<img src="../icons/eye-no-icon-original.svg"></img>' : ''}`;
+        let description = "";
+        if (!tab.discarded) {
+            description = `Last accessed ${timeDifferenceString(tab.lastAccessed)}`;
+        } 
+        // else {
+        //     description = "Unloaded"
+        // }
+        containerNode.children.description.append(description);
+        if (tab.pinned) {
+            let pinSpan = document.createElement("span");
+            pinSpan.classList.add("emoji")
+            pinSpan.innerText = "📌";
+            containerNode.children.description.append(pinSpan);
+        }
 
-        containerNode.children.description.innerHTML = description;
+        if (tab.hidden) {
+            let hiddenImage = document.createElement("img")
+            hiddenImage.src = "../icons/eye-no-icon-original.svg"
+            containerNode.children.description.append(hiddenImage);
+        }
+        // description += ` ${tab.pinned ? '<span class="emoji">📌</span>' : ''}${tab.hidden ? '<img src="../icons/eye-no-icon-original.svg"></img>' : ''}`;
+
+        // containerNode.children.description.innerHTML = description;
 
         let button = containerNode.querySelector("button");
 

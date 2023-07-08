@@ -1,6 +1,7 @@
 module.exports = {
     ignoreFiles: [
         "build.sh",
+        "build.cmd",
         "tests",
         "karma.config.js",
         "web-ext-config.js",
