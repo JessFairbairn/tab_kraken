@@ -1,5 +1,6 @@
 module.exports = {
     ignoreFiles: [
+        ".github",
         "build.sh",
         "build.cmd",
         "tests",
