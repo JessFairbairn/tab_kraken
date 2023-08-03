@@ -4,6 +4,9 @@ name: Karma Tests
 on:
   pull_request:
     branches: [ $branch ]
+  push:
+    branches:
+      master
 
 # Job Setup
 jobs:
