@@ -10,7 +10,7 @@ on:
 
 # Job Setup
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2 #Checkout Repo
