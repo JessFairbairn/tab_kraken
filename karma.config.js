@@ -12,8 +12,11 @@ module.exports = function(config) {
   
       // list of files / patterns to load in the browser
       files: [
-        {pattern: 'js_utils/StringCounter.js', included: false, type: "module"},
-        {pattern:'tests/*Tests.js', type: "module"}
+        {pattern: 'js_utils/*', included: false, type: "module"},
+        // {pattern: 'js_utils/timeDifferenceString.js', included: false, type: "module"},
+        {pattern: 'page/templates.html', included: false, type: 'html'},
+        {pattern: 'page/TabItems.js', included: false, type: "module"},
+        {pattern: 'tests/*Tests.js', type: "module"}
       ],
   
   
@@ -62,6 +65,11 @@ module.exports = function(config) {
   
       // Concurrency level
       // how many browser should be started simultaneous
-      concurrency: Infinity
+      concurrency: Infinity,
+
+      proxies: {
+        "/page/templates.html": "/base/page/templates.html"
+      },
+      
     })
   }

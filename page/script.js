@@ -1,13 +1,12 @@
 import "../external/browser-polyfill.min.js"
 import StringCounter from "../js_utils/StringCounter.js"
-import delayPromise from "../js_utils/delayPromise.js";
-import { TabItemList } from "./TabItems.js";
+import { loadTemplates, TabItemList } from "./TabItems.js";
 
 const DOMAIN_LIST_ELEMENT = document.getElementById("domain-list");
 const DUPLICATE_LIST_ELEMENT = document.getElementById("duplicate-list");
 
 const TAB_KRAKEN_UUID = (new URL(document.URL)).hostname;
-
+await loadTemplates();
 browser.tabs.query({}).then(async tabList => {
 
     loadDomainList(tabList);

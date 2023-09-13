@@ -1,6 +1,13 @@
 
 import { timeDifferenceString } from "../js_utils/timeDifferenceString.js";
 
+export async function loadTemplates() {
+    const TEMPLATES = document.createElement("div");
+    let template_file = await fetch( '/page/templates.html' );
+    TEMPLATES.innerHTML = await template_file.text();
+    document.body.append(TEMPLATES);
+}
+
 export class TabItemList extends HTMLElement {
 
     constructor(tabList, closeFunction, displayTabLabel, collapseList = false) {
@@ -94,7 +101,12 @@ export class TabItem extends HTMLLIElement {
         // this.classList.add("tab-item", "flex-bar");
         this.id = `tab-${tab.id}`
 
-        let title = tab.title !== "Server Not Found" ? tab.title : tab.url
+        let title;
+        if(tab.title && tab.title !== "Server Not Found"){
+            title = tab.title;
+        } else{
+            title = tab.url;
+        }
         title = title.slice(0,50);
         this.innerText = displayTabLabel ? title + ' ' : '';
         
