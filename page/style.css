@@ -33,8 +33,9 @@
 
 
 .cool-list, ul.cool-list{
-    min-width: 30em;
-    width: 30em;
+    /* min-width: 30em;
+    width: 30em; */
+    min-width: 0.25vw;
 }
 
 .cool-list, .cool-list ul{
