@@ -3,7 +3,7 @@ import { timeDifferenceString } from "../js_utils/timeDifferenceString.js";
 
 export async function loadTemplates() {
     const TEMPLATES = document.createElement("div");
-    let template_file = await fetch( '/page/templates.html' );
+    const template_file = await fetch( '/page/templates.html' );
     TEMPLATES.innerHTML = await template_file.text();
     document.body.append(TEMPLATES);
 }
@@ -114,9 +114,9 @@ export class TabItem extends HTMLLIElement {
         if (!tab.discarded) {
             description = `Last accessed ${timeDifferenceString(tab.lastAccessed)}`;
         } 
-        // else {
-        //     description = "Unloaded"
-        // }
+        else {
+            description = "Inactive"
+        }
         containerNode.children.description.append(description);
         if (tab.pinned) {
             let pinSpan = document.createElement("span");
