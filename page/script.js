@@ -15,7 +15,14 @@ browser.tabs.query({}).then(async tabList => {
 
 let tabLists = [];
 
-browser.tabs.onUpdated.addListener(reloadAll);
+browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    let changedProperties = Object.getOwnPropertyNames(changeInfo);
+    if (changedProperties.length === 1 && changedProperties[0] === "title"){
+        return;
+    }
+    reloadAll();
+});
+
 browser.tabs.onCreated.addListener(reloadAll);
 browser.tabs.onRemoved.addListener((tabId, removeInfo) => {
     // delayPromise(100).then(reloadAll);
