@@ -33,7 +33,7 @@ browser.tabs.onRemoved.addListener((tabId, removeInfo) => {
 
 
 async function loadDuplicateTabList(fullTabList) {
-    DUPLICATE_LIST_ELEMENT.innerHTML  = '';
+    DUPLICATE_LIST_ELEMENT.replaceChildren();
     console.debug("clearing duplicate list")
     const siteSet = countSiteNumbersInTabList(fullTabList);
     const duplicateTabList = Object.entries(siteSet.getResultsWithMin(2));
@@ -58,7 +58,7 @@ async function loadDuplicateTabList(fullTabList) {
 function loadDomainList(tabList) {
     const generator = countDomainNumbersInTabList(tabList);
 
-    DOMAIN_LIST_ELEMENT.innerHTML  = '';
+    DOMAIN_LIST_ELEMENT.replaceChildren();
 
 
     for (const [domain, domainTabList] of generator) {
@@ -97,11 +97,11 @@ function* countDomainNumbersInTabList(urlList) {
     for (let tab of urlList) {
         if (tab.url.startsWith("about:")) {
             domainCounts.add("about");
-            domainTabLists["about"].push(tab)
+            domainTabLists["about"].push(tab);
         }
         else if (tab.url.startsWith("moz-extension://" + TAB_KRAKEN_UUID)) {
             domainCounts.add("Tab Kraken");
-            domainTabLists["Tab Kraken"].push(tab)
+            domainTabLists["Tab Kraken"].push(tab);
         }
         else if (tab.url.startsWith("moz-extension://")) {
             
@@ -112,7 +112,7 @@ function* countDomainNumbersInTabList(urlList) {
 
             // domainCounts.add(`Extension ${}`)
             domainCounts.add('Extensions');
-            domainTabLists["Extensions"].push(tab)
+            domainTabLists["Extensions"].push(tab);
         }
         else {
             let url = new URL(tab.url);
@@ -157,6 +157,7 @@ async function closeAllTabsWithUrl(url) {
 }
 
 async function reloadAll() {
+    tabLists = [];
     let fullTabList = await browser.tabs.query({});
     loadDomainList(fullTabList);
     await loadDuplicateTabList(fullTabList);
