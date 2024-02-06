@@ -59,7 +59,7 @@
         #tab-list li slot[name="description"] {
             font-style: italic;
         }
-        #tab-list li slot[name="description"] img {
+        #tab-list li .indicator-wrapper {
             margin-left: auto;
             margin-right: 0.5em;
         }
@@ -73,9 +73,21 @@
             margin-right: 1em;
             padding-top: 2px; /*not super important but makes the chevron not too high*/
         }
+
+        .clickable {
+            cursor: pointer;
+        }
+
+        .clickable:hover .label-wrapper{
+            text-decoration: underline;
+        }
+
+        .indicator-wrapper * {
+            display: block;
+            height: 1.2em;
+        }
     </style>
-    <div class="flex-bar">
-        <slot></slot>: <slot name="number"></slot>
+    <div class="flex-bar"><slot></slot>: <slot name="number"></slot>
         <button
         id="collapseButton"
         title="Toggle list of tabs in category"
@@ -89,6 +101,9 @@
 </template>
 
 <template id="tab-item-template" class="flex-bar">
-    <slot></slot> <slot name="description"></slot>
+    <span class="label-wrapper">
+        <slot></slot> <slot name="description"></slot>
+    </span>
+    <span class="indicator-wrapper"></span>
     <button title="Close tab"><span aria-hidden="true">✖</span></button>
 </template>

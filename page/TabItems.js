@@ -86,6 +86,12 @@ export class TabItem extends HTMLLIElement {
     
     constructor(tab, displayTabLabel = false) {
         super();
+        this.tab = tab;
+        this.displayTabLabel = displayTabLabel;
+    }
+
+    connectedCallback() {
+
         let template = document.getElementById("tab-item-template");
         let templateContent = template.content;
 
@@ -93,56 +99,61 @@ export class TabItem extends HTMLLIElement {
         const containerNode = (templateContent.cloneNode(true));
 
 
-        if (!tab) {
+        if (!this.tab) {
             return;
         }
-
-        
-        // this.classList.add("tab-item", "flex-bar");
-        this.id = `tab-${tab.id}`
+        this.id = `tab-${this.tab.id}`
 
         let title;
-        if(tab.title && tab.title !== "Server Not Found"){
-            title = tab.title;
-        } else{
-            title = tab.url;
+        if (this.tab.title && this.tab.title !== "Server Not Found") {
+            title = this.tab.title;
+        } else {
+            title = this.tab.url;
         }
         title = title.slice(0,50);
-        this.innerText = displayTabLabel ? title + ' ' : '';
+        let slotNode = containerNode.querySelector("slot")
+        slotNode.append(this.displayTabLabel ? title + ' ' : '');
         
         let description = "";
-        if (!tab.discarded) {
-            description = `Last accessed ${timeDifferenceString(tab.lastAccessed)}`;
+        if (!this.tab.discarded) {
+            description = `Last accessed ${timeDifferenceString(this.tab.lastAccessed)}`;
         } 
         else {
             description = "Inactive"
         }
-        containerNode.children.description.append(description);
-        if (tab.pinned) {
+        containerNode.querySelector("slot[name=description]").append(description);
+        
+        if (this.tab.pinned) {
             let pinSpan = document.createElement("span");
             pinSpan.classList.add("emoji")
             pinSpan.innerText = "📌";
-            containerNode.children.description.append(pinSpan);
+            containerNode.querySelector(".indicator-wrapper").append(pinSpan);
         }
 
-        if (tab.hidden) {
+        if (this.tab.hidden) {
             let hiddenImage = document.createElement("img")
             hiddenImage.src = "../icons/eye-no-icon-original.svg"
-            containerNode.children.description.append(hiddenImage);
+            containerNode.querySelector(".indicator-wrapper").append(hiddenImage);
         }
-        // description += ` ${tab.pinned ? '<span class="emoji">📌</span>' : ''}${tab.hidden ? '<img src="../icons/eye-no-icon-original.svg"></img>' : ''}`;
-
-        // containerNode.children.description.innerHTML = description;
 
         let button = containerNode.querySelector("button");
 
-        button.onclick = async () => {
-            await closeTabById(tab.id);
+        button.onclick = async event => {
+            event.stopPropagation();
+            await closeTabById(this.tab.id);
             this.remove();
+        }
+        if (!this.tab.hidden) {
+            // let labelWrapper = containerNode.querySelector(".label-wrapper");
+            this.classList.add("clickable");
+            this.onclick = async () => {
+                await browser.tabs.update(this.tab.id, {active: true});
+            }
         }
 
         this.append(containerNode);
     }
+
 }
 
 customElements.define('tab-item-list', TabItemList);
