@@ -143,6 +143,7 @@ export class TabItem extends HTMLLIElement {
             await closeTabById(this.tab.id);
             this.remove();
         }
+        this.title = this.tab.url;
         if (!this.tab.hidden) {
             // let labelWrapper = containerNode.querySelector(".label-wrapper");
             this.classList.add("clickable");
