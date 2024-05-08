@@ -1,6 +1,7 @@
 {
+  "type": "module",
   "scripts": {
-    "test": "karma start karma.config.js"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "private": true,
   "dependencies": {
@@ -8,10 +9,8 @@
   },
   "devDependencies": {
     "@webpack-cli/generators": "^3.0.1",
-    "jasmine-core": "^4.5.0",
-    "karma": "^6.4.1",
-    "karma-firefox-launcher": "^2.1.2",
-    "karma-jasmine": "^5.1.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
     "web-ext-plugin": "^2.7.0",
     "webpack-cli": "^5.0.1"
   }

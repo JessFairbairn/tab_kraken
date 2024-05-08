@@ -4,3 +4,5 @@ node_modules
 
 external
 vscode-firefox-debug.log
+
+coverage
