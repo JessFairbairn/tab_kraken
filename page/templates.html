@@ -67,11 +67,28 @@
         #tab-list.collapsed {
             display: none;
         }
-
-        #collapseButton {
+        #context-button {
             margin-left: auto;
+        }
+        #collapseButton {
+            margin-left: 1em;
             margin-right: 1em;
             padding-top: 2px; /*not super important but makes the chevron not too high*/
+        }
+
+        menu {
+            display: none;
+            background-color: grey;
+        }
+
+        .menu-wrapper {
+            width: 0;
+            position: relative;
+        }
+
+        #context-button:active menu, #context-button:focus-within menu {
+            display: block;
+            position: absolute;
         }
 
         .clickable {
@@ -88,6 +105,17 @@
         }
     </style>
     <div class="flex-bar"><slot></slot>: <slot name="number"></slot>
+        <a id="context-button" href="#">
+            ...
+            <menu>
+                           <button>test</button>
+            </menu>
+        </a>
+        <!-- <div class="menu-wrapper">
+            <menu>
+                <button>test</button>
+            </menu>
+        </div> -->
         <button
         id="collapseButton"
         title="Toggle list of tabs in category"

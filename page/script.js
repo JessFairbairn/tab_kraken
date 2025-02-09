@@ -16,8 +16,12 @@ browser.tabs.query({}).then(async tabList => {
 let tabLists = [];
 
 browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    if (changeInfo.url.startsWith(`moz-extension://${TAB_KRAKEN_UUID}`)) {
+        return;
+    }
     let changedProperties = Object.getOwnPropertyNames(changeInfo);
-    if (changedProperties.length === 1 && changedProperties[0] === "title"){
+    if (changedProperties.length === 1 && changedProperties[0] === "title") 
+        {
         return;
     }
     reloadAll();
