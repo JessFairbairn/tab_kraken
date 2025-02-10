@@ -16,7 +16,7 @@ browser.tabs.query({}).then(async tabList => {
 let tabLists = [];
 
 browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    if (changeInfo.url.startsWith(`moz-extension://${TAB_KRAKEN_UUID}`)) {
+    if (changeInfo.url?.startsWith(`moz-extension://${TAB_KRAKEN_UUID}`)) {
         return;
     }
     let changedProperties = Object.getOwnPropertyNames(changeInfo);
