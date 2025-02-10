@@ -86,7 +86,7 @@
             position: relative;
         }
 
-        #context-button:active menu, #context-button:focus-within menu {
+        a#context-button:active menu, menu:focus-within, menu.visible {
             display: block;
             position: absolute;
         }
@@ -108,9 +108,10 @@
         <a id="context-button" href="#">
             ...
             <menu>
-                           <button>test</button>
+                <button>test</button>
             </menu>
         </a>
+        
         <!-- <div class="menu-wrapper">
             <menu>
                 <button>test</button>
