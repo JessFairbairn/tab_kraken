@@ -47,7 +47,7 @@ async function loadDuplicateTabList(fullTabList) {
         
         let tabListElement = new TabItemList(
             tabs, 
-            async () => await closeAllTabsWithUrl(key), 
+            async (includeHidden = false) => await closeAllTabsWithUrl(key, includeHidden), 
             false
         );
         tabListElement.innerText = key;
@@ -73,7 +73,7 @@ function loadDomainList(tabList) {
 
         let tabListElement = new TabItemList(
             domainTabList, 
-            () => closeAllTabsInDomain(domain), 
+            (includeHidden=false) => closeAllTabsInDomain(domain, includeHidden), 
             true,
             true
         );
@@ -145,7 +145,7 @@ function countSiteNumbersInTabList(urlList) {
     return siteCounts;
 }
 
-async function closeAllTabsInDomain(domain) {
+async function closeAllTabsInDomain(domain, includeHidden=false) {
     
     let tabs = await browser.tabs.query({url: `*://${domain}/*`, pinned: false, hidden: false});
     let tabIds = tabs.map(tab => tab.id);
@@ -153,7 +153,7 @@ async function closeAllTabsInDomain(domain) {
     await reloadAll();
 }
 
-async function closeAllTabsWithUrl(url) {
+async function closeAllTabsWithUrl(url, includeHidden=false) {
     
     let tabs = await browser.tabs.query({url: url, pinned: false, hidden: false});
     let tabIds = tabs.map(tab => tab.id);

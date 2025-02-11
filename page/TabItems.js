@@ -37,6 +37,9 @@ export class TabItemList extends HTMLElement {
         }
 
         this.shadowRoot.querySelector("#closeAllButton").onclick = closeFunction;
+        this.shadowRoot.querySelector("#close-all-including-hidden-button").onclick = () => {
+            closeFunction(true)
+        };
         this.shadowRoot.querySelector("#collapseButton").onclick = this.toggleCollapse;
 
         this.shadowRoot.getElementById("context-button").onclick = this.openContext;
@@ -87,7 +90,7 @@ export class TabItemList extends HTMLElement {
         // event.preventDefault();
         let shadowRoot = this.getRootNode();
         shadowRoot.querySelector("menu").classList.add("visible");
-        shadowRoot.querySelector("menu *:first-child").focus();
+        shadowRoot.querySelector("menu li:first-child button").focus();
         shadowRoot.querySelector("menu").classList.remove("visible");
     }
 }

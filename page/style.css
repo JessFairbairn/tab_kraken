@@ -1,7 +1,7 @@
 @import url('dark-colours.css') (prefers-color-scheme: dark);
 @import url('light-colours.css') (prefers-color-scheme: light);
 
-* {
+*, button {
     font-family: "Fira Sans", Helvetica, sans-serif;
 }
 

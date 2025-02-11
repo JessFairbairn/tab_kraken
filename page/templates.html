@@ -47,7 +47,7 @@
             padding-right: 0.5em;
         }
 
-        .flex-bar button {
+        .flex-bar > button {
             flex-direction: row;
             border: 0;
         }
@@ -79,11 +79,25 @@
         menu {
             display: none;
             background-color: grey;
+            padding: 1px;
         }
 
         .menu-wrapper {
             width: 0;
             position: relative;
+        }
+
+        menu > li {
+            padding: 0;
+            margin-bottom: 2px;
+            list-style: none;
+        }
+
+        menu > li:last-child {
+            margin-bottom: initial;
+        }
+        menu button {
+            border: 0;
         }
 
         a#context-button:active menu, menu:focus-within, menu.visible {
@@ -108,7 +122,9 @@
         <a id="context-button" href="#">
             ...
             <menu>
-                <button>test</button>
+                <li><button id="close-all-including-hidden-button">
+                    Close all including hidden
+                </button></li>
             </menu>
         </a>
         
