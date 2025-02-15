@@ -147,7 +147,11 @@ function countSiteNumbersInTabList(urlList) {
 
 async function closeAllTabsInDomain(domain, includeHidden=false) {
     
-    let tabs = await browser.tabs.query({url: `*://${domain}/*`, pinned: false, hidden: false});
+    const queryParams = { url: `*://${domain}/*`, pinned: false };
+    if (!includeHidden) {
+        queryParams["hidden"] = false;
+    }
+    let tabs = await browser.tabs.query(queryParams);
     let tabIds = tabs.map(tab => tab.id);
     await browser.tabs.remove(tabIds);
     await reloadAll();
@@ -155,7 +159,11 @@ async function closeAllTabsInDomain(domain, includeHidden=false) {
 
 async function closeAllTabsWithUrl(url, includeHidden=false) {
     
-    let tabs = await browser.tabs.query({url: url, pinned: false, hidden: false});
+    const queryParams = { url: url, pinned: false };
+    if (!includeHidden) {
+        queryParams["hidden"] = false;
+    }
+    let tabs = await browser.tabs.query(queryParams);
     let tabIds = tabs.map(tab => tab.id);
     await browser.tabs.remove(tabIds);
 }

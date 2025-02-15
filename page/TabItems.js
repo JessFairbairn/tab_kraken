@@ -36,8 +36,10 @@ export class TabItemList extends HTMLElement {
             this.tabMap[tab.id] = tabItem;
         }
 
-        this.shadowRoot.querySelector("#closeAllButton").onclick = closeFunction;
-        this.shadowRoot.querySelector("#close-all-including-hidden-button").onclick = () => {
+        this.shadowRoot.querySelector("#closeAllButton").onclick = _event => {
+            closeFunction(false)
+        };
+        this.shadowRoot.querySelector("#close-all-including-hidden-button").onclick = _event => {
             closeFunction(true)
         };
         this.shadowRoot.querySelector("#collapseButton").onclick = this.toggleCollapse;
