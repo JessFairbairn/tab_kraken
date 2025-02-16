@@ -2,12 +2,11 @@
 @import url('light-colours.css') (prefers-color-scheme: light);
 
 *, button {
-    font-family: "Fira Sans", Helvetica, sans-serif;
+    font-family: "Fira Sans", Helvetica, sans-serif!important;
 }
-
+ 
 
 .cool-list {
-    
     padding: 0.5em;
 }
 
@@ -18,18 +17,18 @@
 }
 
 
-/* .cool-list li:nth-child(odd) {
+.cool-list li:nth-child(odd) {
     background-color: var(--group-background-colour);
-} */
+}
 
 .cool-list > li, .cool-list > .tab-item {
-    /* background-color: var(--alternate-row-colour); */
+    background-color: var(--alternate-row-colour);
     background-color: var(--group-background-colour);
 }
 
 .cool-list ul > li {
     background-color: var(--alternate-row-colour);
-}
+} */
 
 
 .cool-list, ul.cool-list{

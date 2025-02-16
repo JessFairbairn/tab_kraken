@@ -37,10 +37,11 @@ export class TabItemList extends HTMLElement {
         }
 
         this.shadowRoot.querySelector("#closeAllButton").onclick = _event => {
-            closeFunction(false)
+            closeFunction(false);
         };
         this.shadowRoot.querySelector("#close-all-including-hidden-button").onclick = _event => {
-            closeFunction(true)
+            shadowRoot.getElementById("context-button").focus();
+            closeFunction(true);
         };
         this.shadowRoot.querySelector("#collapseButton").onclick = this.toggleCollapse;
 

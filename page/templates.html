@@ -97,6 +97,10 @@
             padding-top: 2px; /*not super important but makes the chevron not too high*/
         }
 
+        #menuWrapper {
+            position: relative;
+        }
+
         menu {
             display: none;
             background-color: grey;
@@ -117,9 +121,10 @@
         menu button {
             border: 0;
             padding: 0.5em;
+            min-width: 10em;
         }
 
-        a#context-button:active menu, menu:focus-within, menu.visible {
+        #context-button:active~menu, menu:focus-within, menu.visible {
             display: block;
             position: absolute;
         }
@@ -138,20 +143,16 @@
         }
     </style>
     <div class="flex-bar"><slot></slot>: <slot name="number"></slot>
-        <a id="context-button" href="#">
+        <button id="context-button" href="#">
             <span>⋯</span>
-            <menu>
-                <li><button id="close-all-including-hidden-button">
+        </button>
+        <div id="menuWrapper">
+            <menu id="contextMenu" role="menu">
+                <li><button id="close-all-including-hidden-button" role="menuitem">
                     Close all including hidden
                 </button></li>
             </menu>
-        </a>
-        
-        <!-- <div class="menu-wrapper">
-            <menu>
-                <button>test</button>
-            </menu>
-        </div> -->
+        </div>
         <button
         id="collapseButton"
         title="Toggle list of tabs in category"
