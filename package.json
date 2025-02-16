@@ -1,4 +1,5 @@
 {
+  "name": "tab_kraken",
   "scripts": {
     "test": "karma start karma.config.js"
   },
