@@ -6,6 +6,7 @@ module.exports = {
         "tests",
         "karma.config.js",
         "web-ext-config.js",
-        "package.json"
+        "package.json",
+        "package-lock.json",
     ]
   };
