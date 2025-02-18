@@ -143,8 +143,8 @@
         }
     </style>
     <div class="flex-bar"><slot></slot>: <slot name="number"></slot>
-        <button id="context-button" href="#">
-            <span>⋯</span>
+        <button id="context-button" href="#" aria-controls="contextMenu" title="Show more options">
+            <span aria-hidden="true">⋯</span>
         </button>
         <div id="menuWrapper">
             <menu id="contextMenu" role="menu">
@@ -160,7 +160,8 @@
             <img src="../icons/chevron-up.svg" aria-hidden="true"/>
         </button>
         <button id="closeAllButton" title="Close all tabs in category">
-            <span aria-hidden="true">✖</span></button>
+            <span aria-hidden="true">✖</span>
+        </button>
     </div>
     <ul id="tab-list"></ul>
 </template>
