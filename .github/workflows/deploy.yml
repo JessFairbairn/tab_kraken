@@ -9,7 +9,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
         - uses: actions/checkout@v2 #Checkout Repo
-        - name: Install
+        - name: Install NPM dependencies
           run: |
             npm install
             mkdir external
