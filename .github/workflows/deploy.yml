@@ -27,7 +27,6 @@ jobs:
             cmd: sign
             channel: listed
             source: ${{ steps.web-ext-build.outputs.target }}
-            sourceCode: sources.zip
 
             # Specify API secrets.
             apiKey: ${{ secrets.JWT_ISSUER }}
