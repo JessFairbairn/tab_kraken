@@ -36,8 +36,16 @@ export class TabItemList extends HTMLElement {
             this.tabMap[tab.id] = tabItem;
         }
 
-        this.shadowRoot.querySelector("#closeAllButton").onclick = closeFunction;
+        this.shadowRoot.querySelector("#closeAllButton").onclick = _event => {
+            closeFunction(false);
+        };
+        this.shadowRoot.querySelector("#close-all-including-hidden-button").onclick = _event => {
+            shadowRoot.getElementById("context-button").focus();
+            closeFunction(true);
+        };
         this.shadowRoot.querySelector("#collapseButton").onclick = this.toggleCollapse;
+
+        this.shadowRoot.getElementById("context-button").onclick = this.openContext;
 
         this.collapseList = collapseList;
         if (this.collapseList) {
@@ -79,6 +87,14 @@ export class TabItemList extends HTMLElement {
         }
 
         
+    }
+
+    openContext(event) {
+        // event.preventDefault();
+        let shadowRoot = this.getRootNode();
+        shadowRoot.querySelector("menu").classList.add("visible");
+        shadowRoot.querySelector("menu li:first-child button").focus();
+        shadowRoot.querySelector("menu").classList.remove("visible");
     }
 }
 

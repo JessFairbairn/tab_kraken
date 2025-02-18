@@ -16,8 +16,12 @@ browser.tabs.query({}).then(async tabList => {
 let tabLists = [];
 
 browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    if (changeInfo.url?.startsWith(`moz-extension://${TAB_KRAKEN_UUID}`)) {
+        return;
+    }
     let changedProperties = Object.getOwnPropertyNames(changeInfo);
-    if (changedProperties.length === 1 && changedProperties[0] === "title"){
+    if (changedProperties.length === 1 && changedProperties[0] === "title") 
+        {
         return;
     }
     reloadAll();
@@ -43,7 +47,7 @@ async function loadDuplicateTabList(fullTabList) {
         
         let tabListElement = new TabItemList(
             tabs, 
-            async () => await closeAllTabsWithUrl(key), 
+            async (includeHidden = false) => await closeAllTabsWithUrl(key, includeHidden), 
             false
         );
         tabListElement.innerText = key;
@@ -69,7 +73,7 @@ function loadDomainList(tabList) {
 
         let tabListElement = new TabItemList(
             domainTabList, 
-            () => closeAllTabsInDomain(domain), 
+            (includeHidden=false) => closeAllTabsInDomain(domain, includeHidden), 
             true,
             true
         );
@@ -141,17 +145,25 @@ function countSiteNumbersInTabList(urlList) {
     return siteCounts;
 }
 
-async function closeAllTabsInDomain(domain) {
+async function closeAllTabsInDomain(domain, includeHidden=false) {
     
-    let tabs = await browser.tabs.query({url: `*://${domain}/*`, pinned: false, hidden: false});
+    const queryParams = { url: `*://${domain}/*`, pinned: false };
+    if (!includeHidden) {
+        queryParams["hidden"] = false;
+    }
+    let tabs = await browser.tabs.query(queryParams);
     let tabIds = tabs.map(tab => tab.id);
     await browser.tabs.remove(tabIds);
     await reloadAll();
 }
 
-async function closeAllTabsWithUrl(url) {
+async function closeAllTabsWithUrl(url, includeHidden=false) {
     
-    let tabs = await browser.tabs.query({url: url, pinned: false, hidden: false});
+    const queryParams = { url: url, pinned: false };
+    if (!includeHidden) {
+        queryParams["hidden"] = false;
+    }
+    let tabs = await browser.tabs.query(queryParams);
     let tabIds = tabs.map(tab => tab.id);
     await browser.tabs.remove(tabIds);
 }
