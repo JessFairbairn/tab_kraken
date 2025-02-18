@@ -1,0 +1,46 @@
+name: Deploy
+
+on: 
+    release:
+        types: [prereleased]
+
+jobs:
+    Deploy:
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v2 #Checkout Repo
+        - name: Install
+          run: |
+            npm install
+            mkdir external
+            cp node_modules/webextension-polyfill/dist/browser-polyfill.min.js external/browser-polyfill.min.js
+        - name: Web-ext build
+          id: web-ext-build
+          uses: kewisch/action-web-ext@v1
+          with:
+            cmd: build
+
+        - name: Web-ext sign
+          id: web-ext-sign
+          uses: kewisch/action-web-ext@v1
+          with:
+            cmd: sign
+            channel: listed
+            source: ${{ steps.web-ext-build.outputs.target }}
+            sourceCode: sources.zip
+
+            # Specify API secrets.
+            apiKey: ${{ secrets.JWT_ISSUER }}
+            apiSecret: ${{ secrets.JWT_SECRET }}
+
+            # Send it to dev server, for now
+            apiUrlPrefix: "https://addons-dev.allizom.org/api/v5/"
+
+            releaseNotes: ${{github.event.release.body}}
+
+        - name: "Attach release assets to release"
+          env:
+              GH_TOKEN: ${{ github.token }}
+          run: |
+              gh release upload ${{ github.event.release.tag_name }} \
+              ${{ steps.web-ext-sign.outputs.target }}
