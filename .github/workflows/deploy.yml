@@ -2,7 +2,7 @@ name: Deploy
 
 on: 
     release:
-        types: [prereleased]
+        types: [released]
 
 jobs:
     Deploy:
@@ -32,9 +32,6 @@ jobs:
             # Specify API secrets.
             apiKey: ${{ secrets.JWT_ISSUER }}
             apiSecret: ${{ secrets.JWT_SECRET }}
-
-            # Send it to dev server, for now
-            apiUrlPrefix: "https://addons-dev.allizom.org/api/v5/"
 
             releaseNotes: ${{github.event.release.body}}
 
