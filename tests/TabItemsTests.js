@@ -1,8 +1,6 @@
-import {loadTemplates, TabItem} from "../page/TabItems.js"
+import {TabItem} from "../page/TabItems.js"
 
-describe("TabItem constructor", function(){
-    beforeAll(loadTemplates)
-    
+describe("TabItem constructor", function(){    
 
     it("can handle Tab objects without a title property", async () => {
         const fakeTab = {
