@@ -12,7 +12,7 @@ jobs:
     - uses: actions/setup-node@v1 #Setup Node
       with:
         node-version: '22'
-    - name: Run Karma Tests
+    - name: Run Jest Tests
       run: |
         npm install
         npm run test
