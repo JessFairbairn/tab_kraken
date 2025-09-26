@@ -37,6 +37,9 @@ browser.tabs.onRemoved.addListener((tabId, removeInfo) => {
 
 
 async function loadDuplicateTabList(fullTabList) {
+    if (!DUPLICATE_LIST_ELEMENT) {
+        return;
+    }
     DUPLICATE_LIST_ELEMENT.replaceChildren();
     console.debug("clearing duplicate list")
     const siteSet = countSiteNumbersInTabList(fullTabList);
@@ -60,6 +63,9 @@ async function loadDuplicateTabList(fullTabList) {
 }
 
 function loadDomainList(tabList) {
+    if(!DOMAIN_LIST_ELEMENT) {
+        return;
+    }
     const generator = countDomainNumbersInTabList(tabList);
 
     DOMAIN_LIST_ELEMENT.replaceChildren();

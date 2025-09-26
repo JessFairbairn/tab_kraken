@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script type="module" src="../node_modules/webextension-polyfill/dist/browser-polyfill.min.js"></script>
+        <script type="module" src="../js_utils/StringCounter.js"></script>
+        <script type="module" async src="script.js"></script>
+        <link rel="stylesheet" href="style.css"/>
+        <title>Tab Kraken</title>
+    </head>
+    <body class="browser-style">
+        <header class="panel-section panel-section-header">
+            <h1>Tab Kraken</h1>
+        </header>
+        
+        <nav>
+            <a href="domains.html">Domains</a>
+            <a href="duplicates.html">Duplicate Tabs</a>
+        </nav>
+        <H2>Domains</H2>
+        <ul id="domain-list" class="cool-list"></ul>
+        
+        
+    </body>
+</html>

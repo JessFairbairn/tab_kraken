@@ -4,6 +4,26 @@
 *, button {
     font-family: "Fira Sans", Helvetica, sans-serif!important;
 }
+
+nav {
+    display: flex;
+    gap: 1em;
+    flex-wrap: wrap;
+}
+
+nav a {
+    display: block;
+    text-decoration: none;
+    background-color: var(--group-background-colour);
+    flex-grow: 1;
+    text-align: center;
+    font-size: large;
+    padding: 0.5em;
+}
+
+nav a:hover, nav a:focus {
+    background-color: var(--alternate-row-colour);
+}
  
 
 .cool-list {

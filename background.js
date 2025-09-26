@@ -7,7 +7,7 @@ browser.browserAction.onClicked.addListener(() => {
     console.debug("opening window?")
     browser.tabs.create({
         // active: true,
-        url: "page/page.html"
+        url: "page/domains.html"
     }).then(value => {
         console.log(value)
     });
