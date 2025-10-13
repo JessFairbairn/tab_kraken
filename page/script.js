@@ -9,7 +9,7 @@ const TAB_KRAKEN_UUID = (new URL(document.URL)).hostname;
 await loadTemplates();
 browser.tabs.query({}).then(async tabList => {
 
-    loadDomainList(tabList);
+    await loadDomainList(tabList);
     await loadDuplicateTabList(tabList);
 });
 
@@ -62,16 +62,16 @@ async function loadDuplicateTabList(fullTabList) {
     }
 }
 
-function loadDomainList(tabList) {
+async function loadDomainList(tabList) {
     if(!DOMAIN_LIST_ELEMENT) {
         return;
     }
-    const generator = countDomainNumbersInTabList(tabList);
+    const generator = await countDomainNumbersInTabList(tabList);
 
     DOMAIN_LIST_ELEMENT.replaceChildren();
 
 
-    for (const [domain, domainTabList] of generator) {
+    for await (const [domain, domainTabList] of generator) {
         if (!domain) {
             continue;
         }
@@ -93,7 +93,7 @@ function loadDomainList(tabList) {
     }
 }
 
-function* countDomainNumbersInTabList(urlList) {
+async function* countDomainNumbersInTabList(urlList) {
 
     let extension_list = []
     
@@ -115,14 +115,27 @@ function* countDomainNumbersInTabList(urlList) {
         }
         else if (tab.url.startsWith("moz-extension://")) {
             
-            // let url = new URL(tab.url);
+            let url = new URL(tab.url);
+            let addOnId = url.hostname;
             // if (extension_list.indexOf(url.hostname) === -1) {
             //     extension_list.push(url.hostname)
             // }
 
+            let foundAddOn = (await browser.management.getAll()).filter(addon => 
+                addon.id === addOnId || addon.optionsUrl?.includes(addOnId)
+            )[0]
+
             // domainCounts.add(`Extension ${}`)
-            domainCounts.add('Extensions');
-            domainTabLists["Extensions"].push(tab);
+            if (foundAddOn) {
+                domainCounts.add(foundAddOn.name);
+                if (!domainTabLists[foundAddOn.name]) {
+                    domainTabLists[foundAddOn.name] = [];
+                }
+                domainTabLists[foundAddOn.name].push(tab);
+            } else {
+                domainCounts.add('Extensions');
+                domainTabLists["Extensions"].push(tab);
+            }
         }
         else {
             let url = new URL(tab.url);
@@ -177,6 +190,6 @@ async function closeAllTabsWithUrl(url, includeHidden=false) {
 async function reloadAll() {
     tabLists = [];
     let fullTabList = await browser.tabs.query({});
-    loadDomainList(fullTabList);
+    await loadDomainList(fullTabList);
     await loadDuplicateTabList(fullTabList);
 }

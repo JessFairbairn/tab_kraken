@@ -25,6 +25,6 @@
     "scripts": ["external/browser-polyfill.min.js", "background.js"]
   },
 
-  "permissions": ["tabs", "activeTab"]
+  "permissions": ["tabs", "activeTab", "management"]
 
 }
