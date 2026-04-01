@@ -62,6 +62,17 @@ async function loadDuplicateTabList(fullTabList) {
     }
 }
 
+function extractDomainMatchPattern(url) {
+    const INPUT_URL = new URL(url);
+    let schemePattern;
+    if (INPUT_URL.protocol.startsWith("http")) {
+        schemePattern = "*:";
+    } else {
+        schemePattern = INPUT_URL.protocol;
+    }
+    return `${schemePattern}//${INPUT_URL.hostname}/*`
+}
+
 async function loadDomainList(tabList) {
     if(!DOMAIN_LIST_ELEMENT) {
         return;
@@ -79,7 +90,10 @@ async function loadDomainList(tabList) {
 
         let tabListElement = new TabItemList(
             domainTabList, 
-            (includeHidden=false) => closeAllTabsInDomain(domain, includeHidden), 
+            (includeHidden=false) => closeAllTabsMatchingPattern(
+                extractDomainMatchPattern(domainTabList[0].url), 
+                includeHidden
+            ), 
             true,
             true
         );
@@ -94,8 +108,6 @@ async function loadDomainList(tabList) {
 }
 
 async function* countDomainNumbersInTabList(urlList) {
-
-    let extension_list = []
     
     let domainCounts = new StringCounter();
     let domainTabLists = {
@@ -104,6 +116,9 @@ async function* countDomainNumbersInTabList(urlList) {
         "Tab Kraken": []
     };
 
+    
+    const extensionList = await browser.management.getAll();
+    console.time("sorting tabs")
     for (let tab of urlList) {
         if (tab.url.startsWith("about:")) {
             domainCounts.add("about");
@@ -114,14 +129,14 @@ async function* countDomainNumbersInTabList(urlList) {
             domainTabLists["Tab Kraken"].push(tab);
         }
         else if (tab.url.startsWith("moz-extension://")) {
-            
+            // domainTabLists["Extensions"].push(tab);
             let url = new URL(tab.url);
             let addOnId = url.hostname;
             // if (extension_list.indexOf(url.hostname) === -1) {
             //     extension_list.push(url.hostname)
             // }
 
-            let foundAddOn = (await browser.management.getAll()).filter(addon => 
+            let foundAddOn = extensionList.filter(addon => 
                 addon.id === addOnId || addon.optionsUrl?.includes(addOnId)
             )[0]
 
@@ -148,11 +163,13 @@ async function* countDomainNumbersInTabList(urlList) {
         }
         
     }
-
+    console.timeEnd("sorting tabs")
+    console.time("rendering")
     let orderedItems = domainCounts.getAllOrdered()
     for (const [domain, _] of orderedItems) {
         yield [domain, domainTabLists[domain]];
     }
+    console.timeEnd("rendering")
 }
 
 function countSiteNumbersInTabList(urlList) {
@@ -164,16 +181,15 @@ function countSiteNumbersInTabList(urlList) {
     return siteCounts;
 }
 
-async function closeAllTabsInDomain(domain, includeHidden=false) {
+async function closeAllTabsMatchingPattern(pattern, includeHidden=false) {
     
-    const queryParams = { url: `*://${domain}/*`, pinned: false };
+    const queryParams = { url: pattern, pinned: false };
     if (!includeHidden) {
         queryParams["hidden"] = false;
     }
     let tabs = await browser.tabs.query(queryParams);
     let tabIds = tabs.map(tab => tab.id);
     await browser.tabs.remove(tabIds);
-    await reloadAll();
 }
 
 async function closeAllTabsWithUrl(url, includeHidden=false) {
